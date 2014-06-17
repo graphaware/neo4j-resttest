@@ -1,4 +1,4 @@
-GraphAware Neo4j TimeTree
+GraphAware Neo4j RestTest
 =========================
 
 [![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 2.1.2.7.1
