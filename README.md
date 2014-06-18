@@ -30,8 +30,8 @@ embedded mode.
 
 When deployed in server mode, there are three URLs that you can issue POST requests to:
 * `http://your-server-address:7474/graphaware/resttest/clear` to clear your database
-* `http://your-server-address:7474/graphaware/resttest/assertSameGraph` to assert the state of the database. You need to provide a Cypher create statement in the body of the request.
-* `http://your-server-address:7474/graphaware/resttest/assertSubgraph` to assert the state of the database. You need to provide a Cypher create statement in the body of the request.
+* `http://your-server-address:7474/graphaware/resttest/assertSameGraph` to assert the state of the database. You need to provide a (URL encoded) Cypher `CREATE` statement in the body of the request.
+* `http://your-server-address:7474/graphaware/resttest/assertSubgraph` to assert the state of the database. You need to provide a (URL encoded) Cypher `CREATE` statement in the body of the request.
 
 The second API call is used to verify that the graph in the database is exactly the same as the graph created by the Cypher
 CREATE statement provided in the body of the request. This means that the nodes, their properties and labels, relationships,
