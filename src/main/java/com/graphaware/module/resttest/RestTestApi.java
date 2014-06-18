@@ -17,9 +17,9 @@
 package com.graphaware.module.resttest;
 
 import com.graphaware.test.unit.GraphUnit;
+import org.apache.commons.lang.CharEncoding;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.NotFoundException;
 import org.neo4j.tooling.GlobalGraphOperations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import static com.graphaware.common.util.PropertyContainerUtils.deleteNodeAndRelationships;
 
@@ -56,9 +59,9 @@ public class RestTestApi {
 
     @RequestMapping(value = "/assertSameGraph", method = RequestMethod.POST)
     @ResponseBody
-    public String assertSameGraph(@RequestBody String cypher, HttpServletResponse response) {
+    public String assertSameGraph(@RequestBody String cypher, HttpServletResponse response) throws UnsupportedEncodingException {
         try {
-            GraphUnit.assertSameGraph(database, cypher);
+            GraphUnit.assertSameGraph(database, URLDecoder.decode(cypher, CharEncoding.UTF_8));
             response.setStatus(HttpServletResponse.SC_OK);
             return null;
         } catch (AssertionError error) {
@@ -69,9 +72,9 @@ public class RestTestApi {
 
     @RequestMapping(value = "/assertSubgraph", method = RequestMethod.POST)
     @ResponseBody
-    public String assertSubgraph(@RequestBody String cypher, HttpServletResponse response) {
+    public String assertSubgraph(@RequestBody String cypher, HttpServletResponse response) throws UnsupportedEncodingException {
         try {
-            GraphUnit.assertSubgraph(database, cypher);
+            GraphUnit.assertSubgraph(database, URLDecoder.decode(cypher, CharEncoding.UTF_8));
             response.setStatus(HttpServletResponse.SC_OK);
             return null;
         } catch (AssertionError error) {

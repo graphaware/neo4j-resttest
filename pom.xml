@@ -14,7 +14,8 @@
   ~ <http://www.gnu.org/licenses />.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.graphaware.neo4j</groupId>
@@ -28,7 +29,9 @@
     </parent>
 
     <name>GraphAware RestTest Module</name>
-    <description>GraphAware Framework Module for REST-based unit/integration testing of code that talks to Neo4j running in server mode</description>
+    <description>GraphAware Framework Module for REST-based unit/integration testing of code that talks to Neo4j running
+        in server mode
+    </description>
     <url>http://graphaware.com</url>
 
     <licenses>
@@ -95,15 +98,14 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Neo4j -->
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j</artifactId>
+            <artifactId>neo4j-kernel</artifactId>
+            <type>test-jar</type>
             <version>${neo4j.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
-        <!-- GraphAware -->
         <dependency>
             <groupId>com.graphaware.neo4j</groupId>
             <artifactId>common</artifactId>
@@ -115,6 +117,72 @@
             <groupId>com.graphaware.neo4j</groupId>
             <artifactId>tests</artifactId>
             <version>${graphaware.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.neo4j.app</groupId>
+                    <artifactId>neo4j-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.graphaware.neo4j</groupId>
+                    <artifactId>common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.graphaware.neo4j</groupId>
+                    <artifactId>api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-servlet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.graphaware.neo4j</groupId>
+                    <artifactId>server-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.neo4j.app</groupId>
+                    <artifactId>neo4j-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.neo4j.app</groupId>
+                    <artifactId>neo4j-server-enterprise</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.neo4j.app</groupId>
+            <artifactId>neo4j-server</artifactId>
+            <version>${neo4j.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Testing -->
@@ -125,13 +193,13 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Logging -->
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-            <scope>provided</scope>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.1</version>
+            <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <profiles>
