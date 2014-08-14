@@ -1,7 +1,7 @@
 GraphAware Neo4j RestTest
 =========================
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 2.1.3.10.4
+[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 2.1.3.11.5
 
 GraphAware RestTest is a simple library for testing code that talks to Neo4j running in <a href="http://docs.neo4j.org/chunked/stable/server-installation.html" target="_blank">standalone server</a> mode.
 
@@ -41,6 +41,13 @@ If the test passes, you will get an OK (200).
 
 The third API call is used to verify that the graph created by provided Cypher statement is a subgraph of the graph in the database.
 Response codes are same as above.
+
+Limitations
+-----------
+
+A current limitation of this library is that it is not compatible with GraphAware Runtime. GraphAware Runtime writes
+hidden nodes to the database, which should be ignored by this library, but they are not. This will be fixed in the next
+release
 
 License
 -------
