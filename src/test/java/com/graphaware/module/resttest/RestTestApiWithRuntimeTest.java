@@ -22,6 +22,7 @@ import org.apache.commons.lang.CharEncoding;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
+import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.test.TestGraphDatabaseFactory;
@@ -38,7 +39,6 @@ import static org.neo4j.tooling.GlobalGraphOperations.at;
 /**
  * Integration test for {@link com.graphaware.module.resttest.RestTestApi}.
  */
-@Ignore("fails and will be fixed in the next release")
 public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
 
     private static final String FULL_QUERY = "CREATE (one:Person {name:'One'})-[:FRIEND_OF]->(two:Person {name:'Two'})";
@@ -75,10 +75,16 @@ public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
 
     @Test
     public void canClearDatabase() {
+        try (Transaction tx = getDatabase().beginTx()) {
+            getDatabase().createNode();
+            getDatabase().createNode(DynamicLabel.label("Test"));
+            tx.success();
+        }
+
         post(getUrl() + "/clear", HttpStatus.OK.value());
 
         try (Transaction tx = getDatabase().beginTx()) {
-            assertEquals(0, count(at(getDatabase()).getAllNodes()));
+            assertEquals(1, count(at(getDatabase()).getAllNodes()));
             tx.success();
         }
     }

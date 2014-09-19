@@ -16,6 +16,11 @@
 
 package com.graphaware.module.resttest;
 
+import com.graphaware.common.policy.InclusionPolicies;
+import com.graphaware.common.policy.NodeInclusionPolicy;
+import com.graphaware.runtime.ProductionRuntime;
+import com.graphaware.runtime.config.RuntimeConfiguration;
+import com.graphaware.runtime.policy.InclusionPoliciesFactory;
 import com.graphaware.test.unit.GraphUnit;
 import org.apache.commons.lang.CharEncoding;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -52,8 +57,15 @@ public class RestTestApi {
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     public void clearDatabase() {
-        for (Node node : GlobalGraphOperations.at(database).getAllNodes()) {
-            deleteNodeAndRelationships(node);
+        if (ProductionRuntime.getRuntime(database) != null) {
+            GraphUnit.clearGraph(database, InclusionPolicies.all().with(new NodeInclusionPolicy() {
+                @Override
+                public boolean include(Node node) {
+                    return !node.hasLabel(RuntimeConfiguration.GA_METADATA);
+                }
+            }));
+        } else {
+            GraphUnit.clearGraph(database);
         }
     }
 
@@ -61,7 +73,7 @@ public class RestTestApi {
     @ResponseBody
     public String assertSameGraph(@RequestBody String cypher, HttpServletResponse response) throws UnsupportedEncodingException {
         try {
-            GraphUnit.assertSameGraph(database, URLDecoder.decode(cypher, CharEncoding.UTF_8));
+            GraphUnit.assertSameGraph(database, URLDecoder.decode(cypher, CharEncoding.UTF_8), resolveInclusionPolicies());
             response.setStatus(HttpServletResponse.SC_OK);
             return null;
         } catch (AssertionError error) {
@@ -74,12 +86,20 @@ public class RestTestApi {
     @ResponseBody
     public String assertSubgraph(@RequestBody String cypher, HttpServletResponse response) throws UnsupportedEncodingException {
         try {
-            GraphUnit.assertSubgraph(database, URLDecoder.decode(cypher, CharEncoding.UTF_8));
+            GraphUnit.assertSubgraph(database, URLDecoder.decode(cypher, CharEncoding.UTF_8), resolveInclusionPolicies());
             response.setStatus(HttpServletResponse.SC_OK);
             return null;
         } catch (AssertionError error) {
             response.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
             return error.getMessage();
         }
+    }
+
+    private InclusionPolicies resolveInclusionPolicies() {
+        if (ProductionRuntime.getRuntime(database) == null) {
+            return InclusionPolicies.all();
+        }
+
+        return InclusionPoliciesFactory.allBusiness();
     }
 }
