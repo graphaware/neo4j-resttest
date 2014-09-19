@@ -69,6 +69,19 @@ public class RestTestApi {
         }
     }
 
+    /*
+    TODO: change the following methods so that they take the following JSON:
+    {
+        cypher: "CREATE...",      //this is mandatory, the rest optional
+        node:"hasLabel('SomeLabel'),
+        node.property:"key!='timestamp'"
+        relationship:"..",
+        relationship.property:".."
+    }
+    then convert the expressions that are provided to InclusionPolicies using StringToNodeInclusionPolicy etc...
+    so that users can exclude certain things from comparisons.
+     */
+
     @RequestMapping(value = "/assertSameGraph", method = RequestMethod.POST)
     @ResponseBody
     public String assertSameGraph(@RequestBody String cypher, HttpServletResponse response) throws UnsupportedEncodingException {
