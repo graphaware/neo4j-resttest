@@ -1,7 +1,7 @@
 GraphAware Neo4j RestTest
 =========================
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 2.1.4.18.7
+[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 2.1.4.19.8
 
 GraphAware RestTest is a simple library for testing code that talks to Neo4j running in <a href="http://docs.neo4j.org/chunked/stable/server-installation.html" target="_blank">standalone server</a> mode.
 
@@ -29,9 +29,18 @@ embedded mode.
 ### REST API
 
 When deployed in server mode, there are three URLs that you can issue POST requests to:
-* `http://your-server-address:7474/graphaware/resttest/clear` to clear your database
-* `http://your-server-address:7474/graphaware/resttest/assertSameGraph` to assert the state of the database. You need to provide a (URL encoded) Cypher `CREATE` statement in the body of the request.
-* `http://your-server-address:7474/graphaware/resttest/assertSubgraph` to assert the state of the database. You need to provide a (URL encoded) Cypher `CREATE` statement in the body of the request.
+* `http://your-server-address:7474/graphaware/resttest/clear` to clear your database. No body required.
+* `http://your-server-address:7474/graphaware/resttest/assertSameGraph` to assert the state of the database. You need to provide a body described shortly.
+* `http://your-server-address:7474/graphaware/resttest/assertSubgraph` to assert the state of the database. You need to provide a body described shortly.
+
+The body where required needs to provide a Cypher CREATE statement, representing the state of the database being asserted,
+for example:
+
+```json
+{
+    "cypher": "CREATE (one:Person {name:'One'})-[:FRIEND_OF]->(two:Person {name:'Two'})"
+}
+```
 
 The second API call is used to verify that the graph in the database is exactly the same as the graph created by the Cypher
 CREATE statement provided in the body of the request. This means that the nodes, their properties and labels, relationships,
@@ -39,8 +48,22 @@ and their properties and labels must be exactly the same. Note that Neo4j intern
 In case the graphs aren't identical, the assertion fails and you will get a response with EXPECTATION_FAILED (417) status code.
 If the test passes, you will get an OK (200).
 
+It is possible to use expressions to include/exclude certain nodes, relationships, and properties thereof from the comparisons.
+For example, for the purposes of comparison, if we only wanted to include nodes labelled `Person`, relationships with type `FRIEND_OF`, and ignore any
+`timestamp` properties on both nodes and relationships, the body of the POST request would look like this:
+
+```json
+{
+    "cypher": "CREATE (one:Person {name:'One'})-[:FRIEND_OF]->(two:Person {name:'Two'})",
+    "node":"hasLabel('Person')",
+    "relationship":"isType('FRIEND_OF')",
+    "node.property":"key != 'timestamp'",
+    "relationship.property":"key != 'timestamp'"
+}
+```
+
 The third API call is used to verify that the graph created by provided Cypher statement is a subgraph of the graph in the database.
-Response codes are same as above.
+Request body options and response codes are same as above.
 
 License
 -------
