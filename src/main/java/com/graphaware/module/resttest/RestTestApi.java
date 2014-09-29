@@ -18,6 +18,10 @@ package com.graphaware.module.resttest;
 
 import com.graphaware.common.policy.InclusionPolicies;
 import com.graphaware.common.policy.NodeInclusionPolicy;
+import com.graphaware.common.policy.spel.SpelNodeInclusionPolicy;
+import com.graphaware.common.policy.spel.SpelNodePropertyInclusionPolicy;
+import com.graphaware.common.policy.spel.SpelRelationshipInclusionPolicy;
+import com.graphaware.common.policy.spel.SpelRelationshipPropertyInclusionPolicy;
 import com.graphaware.runtime.ProductionRuntime;
 import com.graphaware.runtime.config.RuntimeConfiguration;
 import com.graphaware.runtime.policy.InclusionPoliciesFactory;
@@ -34,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -69,24 +74,15 @@ public class RestTestApi {
         }
     }
 
-    /*
-    TODO: change the following methods so that they take the following JSON:
-    {
-        cypher: "CREATE...",      //this is mandatory, the rest optional
-        node:"hasLabel('SomeLabel'),
-        node.property:"key!='timestamp'"
-        relationship:"..",
-        relationship.property:".."
-    }
-    then convert the expressions that are provided to InclusionPolicies using StringToNodeInclusionPolicy etc...
-    so that users can exclude certain things from comparisons.
-     */
-
     @RequestMapping(value = "/assertSameGraph", method = RequestMethod.POST)
     @ResponseBody
-    public String assertSameGraph(@RequestBody String cypher, HttpServletResponse response) throws UnsupportedEncodingException {
+    public String assertSameGraph(@RequestBody RestTestRequest request, HttpServletResponse response) throws IOException {
+        if (request.getCypher() == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Cypher statement must be provided");
+        }
+
         try {
-            GraphUnit.assertSameGraph(database, URLDecoder.decode(cypher, CharEncoding.UTF_8), resolveInclusionPolicies());
+            GraphUnit.assertSameGraph(database, request.getCypher(), resolveInclusionPolicies(request));
             response.setStatus(HttpServletResponse.SC_OK);
             return null;
         } catch (AssertionError error) {
@@ -97,9 +93,13 @@ public class RestTestApi {
 
     @RequestMapping(value = "/assertSubgraph", method = RequestMethod.POST)
     @ResponseBody
-    public String assertSubgraph(@RequestBody String cypher, HttpServletResponse response) throws UnsupportedEncodingException {
+    public String assertSubgraph(@RequestBody RestTestRequest request, HttpServletResponse response) throws IOException {
+        if (request.getCypher() == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Cypher statement must be provided");
+        }
+
         try {
-            GraphUnit.assertSubgraph(database, URLDecoder.decode(cypher, CharEncoding.UTF_8), resolveInclusionPolicies());
+            GraphUnit.assertSubgraph(database, request.getCypher(), resolveInclusionPolicies(request));
             response.setStatus(HttpServletResponse.SC_OK);
             return null;
         } catch (AssertionError error) {
@@ -108,11 +108,30 @@ public class RestTestApi {
         }
     }
 
-    private InclusionPolicies resolveInclusionPolicies() {
+    private InclusionPolicies resolveInclusionPolicies(RestTestRequest request) {
+        InclusionPolicies policies;
         if (ProductionRuntime.getRuntime(database) == null) {
-            return InclusionPolicies.all();
+            policies = InclusionPolicies.all();
+        } else {
+            policies = InclusionPoliciesFactory.allBusiness();
         }
 
-        return InclusionPoliciesFactory.allBusiness();
+        if (request.getNode() != null) {
+            policies = policies.with(new SpelNodeInclusionPolicy(request.getNode()));
+        }
+
+        if (request.getRelationship() != null) {
+            policies = policies.with(new SpelRelationshipInclusionPolicy(request.getRelationship()));
+        }
+
+        if (request.getNodeProperty() != null) {
+            policies = policies.with(new SpelNodePropertyInclusionPolicy(request.getNodeProperty()));
+        }
+
+        if (request.getRelationshipProperty() != null) {
+            policies = policies.with(new SpelRelationshipPropertyInclusionPolicy(request.getRelationshipProperty()));
+        }
+
+        return policies;
     }
 }

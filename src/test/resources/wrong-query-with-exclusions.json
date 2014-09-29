@@ -1,0 +1,7 @@
+{
+    "cypher": "CREATE (one:Person {name:'One'})-[:FRIEND_OF {key:'value'}]->(two:Person {name:'Two'})",
+    "node":"hasLabel('Person')",
+    "relationship":"isType('FRIEND_OF')",
+    "node.property":"key != 'timestamp'",
+    "relationship.property":"key != 'timestamp'"
+}

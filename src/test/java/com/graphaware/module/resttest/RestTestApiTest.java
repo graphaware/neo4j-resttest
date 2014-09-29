@@ -28,9 +28,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import static com.graphaware.common.util.IterableUtils.count;
+import static com.graphaware.test.util.TestUtils.jsonAsString;
 import static com.graphaware.test.util.TestUtils.post;
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.tooling.GlobalGraphOperations.at;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * Integration test for {@link RestTestApi}.
@@ -38,8 +40,6 @@ import static org.neo4j.tooling.GlobalGraphOperations.at;
 public class RestTestApiTest extends GraphAwareApiTest {
 
     private static final String FULL_QUERY = "CREATE (one:Person {name:'One'})-[:FRIEND_OF]->(two:Person {name:'Two'})";
-    private static final String SUB_QUERY = "CREATE (one:Person {name:'One'})";
-    private static final String WRONG_QUERY = "CREATE (one:Person {name:'One'})-[:FRIEND_OF {key:'value'}]->(two:Person {name:'Two'})";
 
     @Override
     protected void populateDatabase(GraphDatabaseService database) {
@@ -47,20 +47,22 @@ public class RestTestApiTest extends GraphAwareApiTest {
     }
 
     @Test
-    public void shouldReturnOKWhenTestPasses() throws UnsupportedEncodingException {
-        post(getUrl() + "/assertSameGraph", URLEncoder.encode(FULL_QUERY, CharEncoding.UTF_8), HttpStatus.OK.value());
-        post(getUrl()+ "/assertSubgraph", URLEncoder.encode(SUB_QUERY, CharEncoding.UTF_8), HttpStatus.OK.value());
+    public void shouldReturnOKWhenTestPasses() {
+        post(getUrl() + "/assertSameGraph", jsonAsString("query"), OK.value());
+        post(getUrl()+ "/assertSubgraph", jsonAsString("subquery"), OK.value());
     }
 
     @Test
-    public void shouldReturn4xxWhenTestFails() throws UnsupportedEncodingException {
-        assertEquals("No corresponding relationship found to: (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two})", post(getUrl() + "/assertSameGraph", URLEncoder.encode(WRONG_QUERY, CharEncoding.UTF_8), HttpStatus.EXPECTATION_FAILED.value()));
-        assertEquals("No corresponding relationship found to: (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two})", post(getUrl() + "/assertSubgraph", URLEncoder.encode(WRONG_QUERY, CharEncoding.UTF_8), HttpStatus.EXPECTATION_FAILED.value()));
+    public void shouldReturn4xxWhenTestFails() {
+        assertEquals("No corresponding relationship found to: (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two})",
+                post(getUrl() + "/assertSameGraph", jsonAsString("wrong-query"), EXPECTATION_FAILED.value()));
+        assertEquals("No corresponding relationship found to: (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two})",
+                post(getUrl() + "/assertSubgraph", jsonAsString("wrong-query"), EXPECTATION_FAILED.value()));
     }
 
     @Test
     public void canClearDatabase() {
-        post(getUrl() + "/clear", HttpStatus.OK.value());
+        post(getUrl() + "/clear", OK.value());
 
         try (Transaction tx = getDatabase().beginTx()) {
             assertEquals(0, count(at(getDatabase()).getAllNodes()));

@@ -1,0 +1,3 @@
+{
+    "cypher": "CREATE (one:Person {name:'One'})-[:FRIEND_OF {key:'value'}]->(two:Person {name:'Two'})"
+}
