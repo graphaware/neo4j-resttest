@@ -17,19 +17,14 @@
 package com.graphaware.module.resttest;
 
 import com.graphaware.common.policy.InclusionPolicies;
-import com.graphaware.common.policy.NodeInclusionPolicy;
 import com.graphaware.common.policy.spel.SpelNodeInclusionPolicy;
 import com.graphaware.common.policy.spel.SpelNodePropertyInclusionPolicy;
 import com.graphaware.common.policy.spel.SpelRelationshipInclusionPolicy;
 import com.graphaware.common.policy.spel.SpelRelationshipPropertyInclusionPolicy;
-import com.graphaware.runtime.ProductionRuntime;
-import com.graphaware.runtime.config.RuntimeConfiguration;
+import com.graphaware.runtime.RuntimeRegistry;
 import com.graphaware.runtime.policy.InclusionPoliciesFactory;
 import com.graphaware.test.unit.GraphUnit;
-import org.apache.commons.lang.CharEncoding;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.tooling.GlobalGraphOperations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -37,12 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-
-import static com.graphaware.common.util.PropertyContainerUtils.deleteNodeAndRelationships;
 
 /**
  * REST API for {@link com.graphaware.test.unit.GraphUnit}.
@@ -62,16 +52,7 @@ public class RestTestApi {
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     public void clearDatabase() {
-        if (ProductionRuntime.getRuntime(database) != null) {
-            GraphUnit.clearGraph(database, InclusionPolicies.all().with(new NodeInclusionPolicy() {
-                @Override
-                public boolean include(Node node) {
-                    return !node.hasLabel(RuntimeConfiguration.GA_METADATA);
-                }
-            }));
-        } else {
-            GraphUnit.clearGraph(database);
-        }
+        GraphUnit.clearGraph(database);
     }
 
     @RequestMapping(value = "/assertSameGraph", method = RequestMethod.POST)
@@ -110,7 +91,7 @@ public class RestTestApi {
 
     private InclusionPolicies resolveInclusionPolicies(RestTestRequest request) {
         InclusionPolicies policies;
-        if (ProductionRuntime.getRuntime(database) == null) {
+        if (RuntimeRegistry.getRuntime(database) == null) {
             policies = InclusionPolicies.all();
         } else {
             policies = InclusionPoliciesFactory.allBusiness();

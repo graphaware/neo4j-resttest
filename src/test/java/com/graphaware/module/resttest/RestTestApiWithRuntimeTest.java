@@ -17,6 +17,7 @@
 package com.graphaware.module.resttest;
 
 import com.graphaware.runtime.ProductionRuntime;
+import com.graphaware.runtime.RuntimeRegistry;
 import com.graphaware.test.integration.GraphAwareApiTest;
 import org.apache.commons.lang.CharEncoding;
 import org.junit.Ignore;
@@ -51,7 +52,7 @@ public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
                 .loadPropertiesFromFile("src/test/resources/test-neo4j.properties")
                 .newGraphDatabase();
 
-        ProductionRuntime.getRuntime(database).waitUntilStarted();
+        RuntimeRegistry.getStartedRuntime(database);
 
         return database;
     }
@@ -86,7 +87,7 @@ public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
         post(getUrl() + "/clear", OK.value());
 
         try (Transaction tx = getDatabase().beginTx()) {
-            assertEquals(1, count(at(getDatabase()).getAllNodes()));
+            assertEquals(0, count(at(getDatabase()).getAllNodes()));
             tx.success();
         }
     }
