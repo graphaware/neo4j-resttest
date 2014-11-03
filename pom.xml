@@ -19,7 +19,7 @@
 
     <groupId>com.graphaware.neo4j</groupId>
     <artifactId>resttest</artifactId>
-    <version>2.1.5.22.10-SNAPSHOT</version>
+    <version>2.1.5.22.10</version>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
