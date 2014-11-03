@@ -54,9 +54,9 @@ public class RestTestApiTest extends GraphAwareApiTest {
 
     @Test
     public void shouldReturn4xxWhenTestFails() {
-        assertEquals("No corresponding relationship found to: (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two})",
+        assertEquals("No corresponding relationship found to (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two}) in existing database",
                 post(getUrl() + "/assertSameGraph", jsonAsString("wrong-query"), EXPECTATION_FAILED.value()));
-        assertEquals("No corresponding relationship found to: (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two})",
+        assertEquals("No corresponding relationship found to (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two}) in existing database",
                 post(getUrl() + "/assertSubgraph", jsonAsString("wrong-query"), EXPECTATION_FAILED.value()));
     }
 
