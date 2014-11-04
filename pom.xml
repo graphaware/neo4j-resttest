@@ -19,7 +19,7 @@
 
     <groupId>com.graphaware.neo4j</groupId>
     <artifactId>resttest</artifactId>
-    <version>2.1.5.23.11-SNAPSHOT</version>
+    <version>2.1.5.24.11</version>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -77,7 +77,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <neo4j.version>2.1.5</neo4j.version>
         <spring.version>4.1.1.RELEASE</spring.version>
-        <graphaware.version>2.1.5.23</graphaware.version>
+        <graphaware.version>2.1.5.24</graphaware.version>
     </properties>
 
     <dependencies>
@@ -161,10 +161,6 @@
                     <artifactId>server-common</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>org.neo4j.app</groupId>
                     <artifactId>neo4j-server</artifactId>
                 </exclusion>
@@ -184,6 +180,12 @@
             <artifactId>neo4j-server</artifactId>
             <version>${neo4j.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Testing -->
