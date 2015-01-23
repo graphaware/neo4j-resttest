@@ -1,7 +1,7 @@
 GraphAware Neo4j RestTest
 =========================
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 2.1.6.27.11
+[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 2.1.6.27.12
 
 GraphAware RestTest is a simple library for testing code that talks to Neo4j running in <a href="http://docs.neo4j.org/chunked/stable/server-installation.html" target="_blank">standalone server</a> mode.
 
@@ -32,6 +32,7 @@ When deployed in server mode, there are three URLs that you can issue POST reque
 * `http://your-server-address:7474/graphaware/resttest/clear` to clear your database. No body required.
 * `http://your-server-address:7474/graphaware/resttest/assertSameGraph` to assert the state of the database. You need to provide a body described shortly.
 * `http://your-server-address:7474/graphaware/resttest/assertSubgraph` to assert the state of the database. You need to provide a body described shortly.
+* `http://your-server-address:7474/graphaware/resttest/assertEmpty` to assert the database is empty. You need to provide a body described shortly.
 
 The body where required needs to provide a Cypher CREATE statement, representing the state of the database being asserted,
 for example:
@@ -64,6 +65,9 @@ For example, for the purposes of comparison, if we only wanted to include nodes 
 
 The third API call is used to verify that the graph created by provided Cypher statement is a subgraph of the graph in the database.
 Request body options and response codes are same as above.
+
+Finally, the API call that ensures that the database is empty has the body as an optional requirement and, of course,
+no Cypher is required.
 
 License
 -------
