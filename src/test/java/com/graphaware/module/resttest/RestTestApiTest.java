@@ -93,7 +93,7 @@ public class RestTestApiTest extends GraphAwareApiTest {
 
     @Test
     public void nonEmptyDbShouldPassEmptyTestWithExclusions() {
-        post(getUrl() + "/assertEmpty",jsonAsString("empty-with-exclusions"), OK.value());
+        post(getUrl() + "/assertEmpty", jsonAsString("empty-with-exclusions"), OK.value());
     }
 
     private String getUrl() {
