@@ -49,7 +49,7 @@ public class RestTestApiTest extends GraphAwareApiTest {
     @Test
     public void shouldReturnOKWhenTestPasses() {
         post(getUrl() + "/assertSameGraph", jsonAsString("query"), OK.value());
-        post(getUrl()+ "/assertSubgraph", jsonAsString("subquery"), OK.value());
+        post(getUrl() + "/assertSubgraph", jsonAsString("subquery"), OK.value());
     }
 
     @Test
@@ -68,6 +68,32 @@ public class RestTestApiTest extends GraphAwareApiTest {
             assertEquals(0, count(at(getDatabase()).getAllNodes()));
             tx.success();
         }
+    }
+
+    @Test
+    public void databaseWithDataShouldNotBeEmpty() {
+        assertEquals("The database is not empty, there are nodes",
+                post(getUrl() + "/assertEmpty", EXPECTATION_FAILED.value()));
+
+        assertEquals("The database is not empty, there are nodes",
+                post(getUrl() + "/assertEmpty", "{}", EXPECTATION_FAILED.value()));
+
+        assertEquals("The database is not empty, there are nodes",
+                post(getUrl() + "/assertEmpty", "{\"cypher\":\"\"}", EXPECTATION_FAILED.value()));
+
+        assertEquals("The database is not empty, there are nodes",
+                post(getUrl() + "/assertEmpty", "{\"cypher\": null}", EXPECTATION_FAILED.value()));
+    }
+
+    @Test
+    public void emptyDbShouldPassEmptyTest() {
+        post(getUrl() + "/clear", OK.value());
+        post(getUrl() + "/assertEmpty", OK.value());
+    }
+
+    @Test
+    public void nonEmptyDbShouldPassEmptyTestWithExclusions() {
+        post(getUrl() + "/assertEmpty",jsonAsString("empty-with-exclusions"), OK.value());
     }
 
     private String getUrl() {

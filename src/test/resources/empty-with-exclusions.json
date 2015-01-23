@@ -1,0 +1,4 @@
+{
+    "node":"!hasLabel('Person')",
+    "relationship":"!isType('FRIEND_OF')"
+}

@@ -89,12 +89,29 @@ public class RestTestApi {
         }
     }
 
+    @RequestMapping(value = "/assertEmpty", method = RequestMethod.POST)
+    @ResponseBody
+    public String assertEmpty(@RequestBody(required = false) RestTestRequest request, HttpServletResponse response) throws IOException {
+        try {
+            GraphUnit.assertEmpty(database, resolveInclusionPolicies(request));
+            response.setStatus(HttpServletResponse.SC_OK);
+            return null;
+        } catch (AssertionError error) {
+            response.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
+            return error.getMessage();
+        }
+    }
+
     private InclusionPolicies resolveInclusionPolicies(RestTestRequest request) {
         InclusionPolicies policies;
         if (RuntimeRegistry.getRuntime(database) == null) {
             policies = InclusionPolicies.all();
         } else {
             policies = InclusionPoliciesFactory.allBusiness();
+        }
+
+        if (request == null) {
+            return policies;
         }
 
         if (request.getNode() != null) {
