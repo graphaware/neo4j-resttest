@@ -25,10 +25,10 @@ import com.graphaware.runtime.RuntimeRegistry;
 import com.graphaware.runtime.policy.InclusionPoliciesFactory;
 import com.graphaware.test.unit.GraphUnit;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -50,9 +50,11 @@ public class RestTestApi {
 
     @RequestMapping(value = "/clear", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    @Transactional
     public void clearDatabase() {
-        GraphUnit.clearGraph(database);
+        try (Transaction tx = database.beginTx()) {
+            GraphUnit.clearGraph(database);
+            tx.success();
+        }
     }
 
     @RequestMapping(value = "/assertSameGraph", method = RequestMethod.POST)
