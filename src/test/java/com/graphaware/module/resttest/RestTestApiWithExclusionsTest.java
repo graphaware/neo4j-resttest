@@ -24,7 +24,6 @@ import org.neo4j.graphdb.Transaction;
 
 import static com.graphaware.common.util.IterableUtils.count;
 import static com.graphaware.test.util.TestUtils.jsonAsString;
-import static com.graphaware.test.util.TestUtils.post;
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.tooling.GlobalGraphOperations.at;
 import static org.springframework.http.HttpStatus.EXPECTATION_FAILED;
@@ -44,21 +43,21 @@ public class RestTestApiWithExclusionsTest extends GraphAwareApiTest {
 
     @Test
     public void shouldReturnOKWhenTestPasses() {
-        post(getUrl() + "/assertSameGraph", jsonAsString("query-with-exclusions"), OK.value());
-        post(getUrl()+ "/assertSubgraph", jsonAsString("subquery-with-exclusions"), OK.value());
+        httpClient.post(getUrl() + "/assertSameGraph", jsonAsString("query-with-exclusions"), OK.value());
+        httpClient.post(getUrl()+ "/assertSubgraph", jsonAsString("subquery-with-exclusions"), OK.value());
     }
 
     @Test
     public void shouldReturn4xxWhenTestFails() {
         assertEquals("No corresponding relationship found to (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two}) in existing database",
-                post(getUrl() + "/assertSameGraph", jsonAsString("wrong-query-with-exclusions"), EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "/assertSameGraph", jsonAsString("wrong-query-with-exclusions"), EXPECTATION_FAILED.value()));
         assertEquals("No corresponding relationship found to (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two}) in existing database",
-                post(getUrl() + "/assertSubgraph", jsonAsString("wrong-query-with-exclusions"), EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "/assertSubgraph", jsonAsString("wrong-query-with-exclusions"), EXPECTATION_FAILED.value()));
     }
 
     @Test
     public void canClearDatabase() {
-        post(getUrl() + "/clear", OK.value());
+        httpClient.post(getUrl() + "/clear", OK.value());
 
         try (Transaction tx = getDatabase().beginTx()) {
             assertEquals(0, count(at(getDatabase()).getAllNodes()));

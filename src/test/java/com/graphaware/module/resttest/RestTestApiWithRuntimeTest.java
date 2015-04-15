@@ -16,28 +16,21 @@
 
 package com.graphaware.module.resttest;
 
-import com.graphaware.runtime.ProductionRuntime;
 import com.graphaware.runtime.RuntimeRegistry;
 import com.graphaware.test.integration.GraphAwareApiTest;
-import org.apache.commons.lang.CharEncoding;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.test.TestGraphDatabaseFactory;
-import org.springframework.http.HttpStatus;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import static com.graphaware.common.util.IterableUtils.count;
 import static com.graphaware.test.util.TestUtils.jsonAsString;
-import static com.graphaware.test.util.TestUtils.post;
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.tooling.GlobalGraphOperations.at;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.EXPECTATION_FAILED;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Integration test for {@link com.graphaware.module.resttest.RestTestApi}.
@@ -64,16 +57,16 @@ public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
 
     @Test
     public void shouldReturnOKWhenTestPasses() {
-        post(getUrl() + "/assertSameGraph", jsonAsString("query"), OK.value());
-        post(getUrl()+ "/assertSubgraph", jsonAsString("subquery"), OK.value());
+        httpClient.post(getUrl() + "/assertSameGraph", jsonAsString("query"), OK.value());
+        httpClient.post(getUrl()+ "/assertSubgraph", jsonAsString("subquery"), OK.value());
     }
 
     @Test
     public void shouldReturn4xxWhenTestFails() {
         assertEquals("No corresponding relationship found to (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two}) in existing database",
-                post(getUrl() + "/assertSameGraph", jsonAsString("wrong-query"), EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "/assertSameGraph", jsonAsString("wrong-query"), EXPECTATION_FAILED.value()));
         assertEquals("No corresponding relationship found to (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two}) in existing database",
-                post(getUrl() + "/assertSubgraph", jsonAsString("wrong-query"), EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "/assertSubgraph", jsonAsString("wrong-query"), EXPECTATION_FAILED.value()));
     }
 
     @Test
@@ -84,7 +77,7 @@ public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
             tx.success();
         }
 
-        post(getUrl() + "/clear", OK.value());
+        httpClient.post(getUrl() + "/clear", OK.value());
 
         try (Transaction tx = getDatabase().beginTx()) {
             assertEquals(0, count(at(getDatabase()).getAllNodes()));
@@ -95,27 +88,27 @@ public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
     @Test
     public void databaseWithDataShouldNotBeEmpty() {
         assertEquals("The database is not empty, there are nodes",
-                post(getUrl() + "/assertEmpty", EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "/assertEmpty", EXPECTATION_FAILED.value()));
 
         assertEquals("The database is not empty, there are nodes",
-                post(getUrl() + "/assertEmpty", "{}", EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "/assertEmpty", "{}", EXPECTATION_FAILED.value()));
 
         assertEquals("The database is not empty, there are nodes",
-                post(getUrl() + "/assertEmpty", "{\"cypher\":\"\"}", EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "/assertEmpty", "{\"cypher\":\"\"}", EXPECTATION_FAILED.value()));
 
         assertEquals("The database is not empty, there are nodes",
-                post(getUrl() + "/assertEmpty", "{\"cypher\": null}", EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "/assertEmpty", "{\"cypher\": null}", EXPECTATION_FAILED.value()));
     }
 
     @Test
     public void emptyDbShouldPassEmptyTest() {
-        post(getUrl() + "/clear", OK.value());
-        post(getUrl() + "/assertEmpty", OK.value());
+        httpClient.post(getUrl() + "/clear", OK.value());
+        httpClient.post(getUrl() + "/assertEmpty", OK.value());
     }
 
     @Test
     public void nonEmptyDbShouldPassEmptyTestWithExclusions() {
-        post(getUrl() + "/assertEmpty", jsonAsString("empty-with-exclusions"), OK.value());
+        httpClient.post(getUrl() + "/assertEmpty", jsonAsString("empty-with-exclusions"), OK.value());
     }
 
     private String getUrl() {
