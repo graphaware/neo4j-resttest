@@ -38,26 +38,26 @@ public class RestTestApiWithExclusionsTest extends GraphAwareApiTest {
 
     @Override
     protected void populateDatabase(GraphDatabaseService database) {
-        new ExecutionEngine(database).execute(FULL_QUERY);
+        database.execute(FULL_QUERY);
     }
 
     @Test
     public void shouldReturnOKWhenTestPasses() {
-        httpClient.post(getUrl() + "/assertSameGraph", jsonAsString("query-with-exclusions"), OK.value());
-        httpClient.post(getUrl()+ "/assertSubgraph", jsonAsString("subquery-with-exclusions"), OK.value());
+        httpClient.post(getUrl() + "assertSameGraph", jsonAsString("query-with-exclusions"), OK.value());
+        httpClient.post(getUrl()+ "assertSubgraph", jsonAsString("subquery-with-exclusions"), OK.value());
     }
 
     @Test
     public void shouldReturn4xxWhenTestFails() {
         assertEquals("No corresponding relationship found to (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two}) in existing database",
-                httpClient.post(getUrl() + "/assertSameGraph", jsonAsString("wrong-query-with-exclusions"), EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "assertSameGraph", jsonAsString("wrong-query-with-exclusions"), EXPECTATION_FAILED.value()));
         assertEquals("No corresponding relationship found to (:Person {name: One})-[:FRIEND_OF {key: value}]->(:Person {name: Two}) in existing database",
-                httpClient.post(getUrl() + "/assertSubgraph", jsonAsString("wrong-query-with-exclusions"), EXPECTATION_FAILED.value()));
+                httpClient.post(getUrl() + "assertSubgraph", jsonAsString("wrong-query-with-exclusions"), EXPECTATION_FAILED.value()));
     }
 
     @Test
     public void canClearDatabase() {
-        httpClient.post(getUrl() + "/clear", OK.value());
+        httpClient.post(getUrl() + "clear", OK.value());
 
         try (Transaction tx = getDatabase().beginTx()) {
             assertEquals(0, count(at(getDatabase()).getAllNodes()));
