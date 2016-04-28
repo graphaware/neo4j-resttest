@@ -16,7 +16,7 @@
 
 package com.graphaware.module.resttest;
 
-import com.graphaware.test.integration.GraphAwareApiTest;
+import com.graphaware.test.integration.GraphAwareIntegrationTest;
 import org.junit.Test;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
@@ -27,14 +27,13 @@ import java.util.Map;
 import static com.graphaware.common.util.IterableUtils.count;
 import static com.graphaware.test.util.TestUtils.jsonAsString;
 import static org.junit.Assert.assertEquals;
-import static org.neo4j.tooling.GlobalGraphOperations.at;
 import static org.springframework.http.HttpStatus.EXPECTATION_FAILED;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Integration test for {@link RestTestApi}.
  */
-public class RestTestApiTest extends GraphAwareApiTest {
+public class RestTestApiTest extends GraphAwareIntegrationTest {
 
     private static final String FULL_QUERY = "CREATE (one:Person {name:'One'})-[:FRIEND_OF]->(two:Person {name:'Two'})";
     private static final Map<String, String> DEFAULT_HEADERS = Collections.singletonMap("Content-Type", "application/json");
@@ -63,7 +62,7 @@ public class RestTestApiTest extends GraphAwareApiTest {
         httpClient.post(getUrl() + "clear", null, DEFAULT_HEADERS, OK.value());
 
         try (Transaction tx = getDatabase().beginTx()) {
-            assertEquals(0, count(at(getDatabase()).getAllNodes()));
+            assertEquals(0, count(getDatabase().getAllNodes()));
             tx.success();
         }
     }

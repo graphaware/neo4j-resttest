@@ -17,12 +17,11 @@
 package com.graphaware.module.resttest;
 
 import com.graphaware.runtime.RuntimeRegistry;
-import com.graphaware.test.integration.GraphAwareApiTest;
+import com.graphaware.test.integration.GraphAwareIntegrationTest;
 import org.junit.Test;
-import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.test.TestGraphDatabaseFactory;
 
 import java.util.Collections;
 import java.util.Map;
@@ -30,27 +29,27 @@ import java.util.Map;
 import static com.graphaware.common.util.IterableUtils.count;
 import static com.graphaware.test.util.TestUtils.jsonAsString;
 import static org.junit.Assert.assertEquals;
-import static org.neo4j.tooling.GlobalGraphOperations.at;
 import static org.springframework.http.HttpStatus.EXPECTATION_FAILED;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Integration test for {@link com.graphaware.module.resttest.RestTestApi}.
  */
-public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
+public class RestTestApiWithRuntimeTest extends GraphAwareIntegrationTest {
 
     private static final String FULL_QUERY = "CREATE (one:Person {name:'One'})-[:FRIEND_OF]->(two:Person {name:'Two'})";
     private static final Map<String, String> DEFAULT_HEADERS = Collections.singletonMap("Content-Type", "application/json");
 
     @Override
-    protected GraphDatabaseService createDatabase() {
-        GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder()
-                .loadPropertiesFromFile("src/test/resources/test-neo4j.properties")
-                .newGraphDatabase();
+    public void setUp() throws Exception {
+        super.setUp();
 
-        RuntimeRegistry.getStartedRuntime(database);
+        RuntimeRegistry.getStartedRuntime(getDatabase());
+    }
 
-        return database;
+    @Override
+    protected String configFile() {
+        return "test-neo4j.conf";
     }
 
     @Override
@@ -59,7 +58,7 @@ public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
     }
 
     @Test
-    public void shouldReturnOKWhenTestPasses() {
+    public void shouldReturnOKWhenTestPasses() throws InterruptedException {
         httpClient.post(getUrl() + "assertSameGraph", jsonAsString("query"), OK.value());
         httpClient.post(getUrl() + "assertSubgraph", jsonAsString("subquery"), OK.value());
     }
@@ -76,14 +75,14 @@ public class RestTestApiWithRuntimeTest extends GraphAwareApiTest {
     public void canClearDatabase() {
         try (Transaction tx = getDatabase().beginTx()) {
             getDatabase().createNode();
-            getDatabase().createNode(DynamicLabel.label("Test"));
+            getDatabase().createNode(Label.label("Test"));
             tx.success();
         }
 
         httpClient.post(getUrl() + "clear", OK.value());
 
         try (Transaction tx = getDatabase().beginTx()) {
-            assertEquals(0, count(at(getDatabase()).getAllNodes()));
+            assertEquals(0, count(getDatabase().getAllNodes()));
             tx.success();
         }
     }

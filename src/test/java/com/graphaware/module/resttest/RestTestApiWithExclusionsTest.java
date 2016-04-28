@@ -16,7 +16,7 @@
 
 package com.graphaware.module.resttest;
 
-import com.graphaware.test.integration.GraphAwareApiTest;
+import com.graphaware.test.integration.GraphAwareIntegrationTest;
 import org.junit.Test;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
@@ -24,14 +24,13 @@ import org.neo4j.graphdb.Transaction;
 import static com.graphaware.common.util.IterableUtils.count;
 import static com.graphaware.test.util.TestUtils.jsonAsString;
 import static org.junit.Assert.assertEquals;
-import static org.neo4j.tooling.GlobalGraphOperations.at;
 import static org.springframework.http.HttpStatus.EXPECTATION_FAILED;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Integration test for {@link com.graphaware.module.resttest.RestTestApi}.
  */
-public class RestTestApiWithExclusionsTest extends GraphAwareApiTest {
+public class RestTestApiWithExclusionsTest extends GraphAwareIntegrationTest {
 
     private static final String FULL_QUERY = "CREATE (one:Person {name:'One', timestamp:12312312321})-[:FRIEND_OF {timestamp:32423423423}]->(two:Person {name:'Two', timestamp:32423524524}), (two)-[:EXCLUDED]->(three {name:'shouldBeIgnored'})";
 
@@ -59,7 +58,7 @@ public class RestTestApiWithExclusionsTest extends GraphAwareApiTest {
         httpClient.post(getUrl() + "clear", OK.value());
 
         try (Transaction tx = getDatabase().beginTx()) {
-            assertEquals(0, count(at(getDatabase()).getAllNodes()));
+            assertEquals(0, count(getDatabase().getAllNodes()));
             tx.success();
         }
     }
