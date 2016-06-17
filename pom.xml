@@ -18,12 +18,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>resttest</artifactId>
-    <version>3.0.2.39.14-SNAPSHOT</version>
+    <version>3.0.3.39.13-SNAPSHOT</version>
 
     <parent>
         <groupId>com.graphaware.neo4j</groupId>
         <artifactId>module-parent</artifactId>
-        <version>3.0.2.39</version>
+        <version>3.0.3.39</version>
     </parent>
 
     <name>GraphAware RestTest Module</name>
