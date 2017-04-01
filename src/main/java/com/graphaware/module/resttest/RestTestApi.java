@@ -16,11 +16,11 @@
 
 package com.graphaware.module.resttest;
 
-import com.graphaware.common.policy.InclusionPolicies;
-import com.graphaware.common.policy.spel.SpelNodeInclusionPolicy;
-import com.graphaware.common.policy.spel.SpelNodePropertyInclusionPolicy;
-import com.graphaware.common.policy.spel.SpelRelationshipInclusionPolicy;
-import com.graphaware.common.policy.spel.SpelRelationshipPropertyInclusionPolicy;
+import com.graphaware.common.policy.inclusion.InclusionPolicies;
+import com.graphaware.common.policy.inclusion.spel.SpelNodeInclusionPolicy;
+import com.graphaware.common.policy.inclusion.spel.SpelNodePropertyInclusionPolicy;
+import com.graphaware.common.policy.inclusion.spel.SpelRelationshipInclusionPolicy;
+import com.graphaware.common.policy.inclusion.spel.SpelRelationshipPropertyInclusionPolicy;
 import com.graphaware.runtime.RuntimeRegistry;
 import com.graphaware.runtime.policy.InclusionPoliciesFactory;
 import com.graphaware.test.unit.GraphUnit;
