@@ -32,7 +32,7 @@ When deployed in server mode, there are three URLs that you can issue POST reque
 * `http://your-server-address:7474/graphaware/resttest/clear` to clear your database. No body required.
 * `http://your-server-address:7474/graphaware/resttest/assertSameGraph` to assert the state of the database. You need to provide a body described shortly.
 * `http://your-server-address:7474/graphaware/resttest/assertSubgraph` to assert the state of the database. You need to provide a body described shortly.
-* `http://your-server-address:7474/graphaware/resttest/assertEmpty` to assert the database is empty. You need to provide a body described shortly.
+* `http://your-server-address:7474/graphaware/resttest/assertEmpty` to assert the database is empty.
 
 The body where required needs to provide a Cypher CREATE statement, representing the state of the database being asserted,
 for example:
