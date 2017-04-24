@@ -49,9 +49,54 @@ and their properties and labels must be exactly the same. Note that Neo4j intern
 In case the graphs aren't identical, the assertion fails and you will get a response with EXPECTATION_FAILED (417) status code.
 If the test passes, you will get an OK (200).
 
+The third API call is used to verify that the graph created by provided Cypher statement is a subgraph of the graph in the database.
+Request body options and response codes are same as above.
+
+Finally, the API call that ensures that the database is empty has the body as an optional requirement and, of course,
+no Cypher is required.
+
+### Cypher procedures and functions
+
+This module provides a set of Cypher procedures and functions that allows to call the methods from Cypher.
+
+#### Cleaning the database stored procedure from Cypher
+
+This procedure allows to clear your database. No parameter required. 
+Example of usage:
+```
+CALL ga.resttest.clearDatabase();
+``` 
+#### Assertion functions from Cypher
+
+This function allows to assert the state of the database. You need to provide a parameter described shortly. 
+Example of usage:
+```
+RETURN ga.resttest.assertSameGraph("{ \"cypher\": \"...\"}") AS value;
+```
+This function is used to verify that the graph in the database is exactly the same as the graph created by the Cypher CREATE statement provided in the parameter. This means that the nodes, their properties and labels, relationships, and their properties and labels must be exactly the same. Note that Neo4j internal node/relationship IDs are ignored.
+In case the graphs aren't identical, the assertion fails and you will get false value. If the test passes, you will get a true value.
+
+This function allows to assert a part of the database. You need to provide a parameter described shortly. 
+Example of usage:
+```
+RETURN ga.resttest.assertSubgraph("{ \"cypher\": \"...\"}") AS value;
+```
+This function is  is used to verify that the graph created by provided Cypher statement is a subgraph of the graph in the database.
+In case if the result of cypher is not identical of any subgraph of the database It will return false value. If it is a subgraph of the database you will get a true value.
+
+This function allows to ensure that the database is empty. You can define a parameter described shortly or use with an empty string. 
+Example of usage:
+```
+RETURN ga.resttest.assertEmpty("{ \"node\": \"...\"}") AS value;
+```
+If the database is not empty It will return false value. If it empty you will get a true value.
+
+
+### Request body and user function parameter 
+
 It is possible to use expressions to include/exclude certain nodes, relationships, and properties thereof from the comparisons.
 For example, for the purposes of comparison, if we only wanted to include nodes labelled `Person`, relationships with type `FRIEND_OF`, and ignore any
-`timestamp` properties on both nodes and relationships, the body of the POST request would look like this:
+`timestamp` properties on both nodes and relationships, the body of the POST request (or the parameter of the function) would look like this:
 
 ```json
 {
@@ -63,11 +108,6 @@ For example, for the purposes of comparison, if we only wanted to include nodes 
 }
 ```
 
-The third API call is used to verify that the graph created by provided Cypher statement is a subgraph of the graph in the database.
-Request body options and response codes are same as above.
-
-Finally, the API call that ensures that the database is empty has the body as an optional requirement and, of course,
-no Cypher is required.
 
 License
 -------
