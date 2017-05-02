@@ -83,12 +83,13 @@
             <groupId>org.neo4j.app</groupId>
             <artifactId>neo4j-server</artifactId>
             <type>test-jar</type>
-            <scope>compile</scope>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.graphaware.neo4j</groupId>
             <artifactId>runtime</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -144,7 +145,38 @@
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.neo4j</groupId>
+                    <artifactId>neo4j-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.neo4j</groupId>
+                    <artifactId>neo4j-kernel</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.neo4j.test</groupId>
+            <artifactId>neo4j-harness</artifactId>
+            <version>${neo4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-kernel</artifactId>
+            <version>${neo4j.version}</version>
+            <type>test-jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-io</artifactId>
+            <version>${neo4j.version}</version>
+            <type>test-jar</type>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -168,6 +200,7 @@
         <dependency>
             <groupId>com.graphaware.neo4j</groupId>
             <artifactId>server</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -178,5 +211,33 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>org/neo4j/kernel/impl/proc/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
