@@ -35,8 +35,8 @@ import java.util.function.Consumer;
 public class RestTestProcedureTest extends EmbeddedDatabaseIntegrationTest {
 
     @Override
-    protected void registerProcedures(Procedures procedures) throws Exception {
-        super.registerProcedures(procedures);
+    protected void registerProceduresAndFunctions(Procedures procedures) throws Exception {
+        super.registerProceduresAndFunctions(procedures);
         procedures.registerProcedure(RestTestProcedure.class);
         procedures.registerFunction(RestTestProcedure.class);
     }

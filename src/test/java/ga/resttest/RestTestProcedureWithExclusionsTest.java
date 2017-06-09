@@ -42,7 +42,7 @@ public class RestTestProcedureWithExclusionsTest extends GraphAwareIntegrationTe
     }
 
     @Override
-    protected void registerProcedures(Procedures procedures) throws Exception {
+    protected void registerProceduresAndFunctions(Procedures procedures) throws Exception {
         procedures.registerProcedure(RestTestProcedure.class);
         procedures.registerFunction(RestTestProcedure.class);
     }
