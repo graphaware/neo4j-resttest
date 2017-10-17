@@ -9,7 +9,9 @@ Getting the Software
 --------------------
 
 You will need the <a href="https://github.com/graphaware/neo4j-framework" target="_blank">GraphAware Neo4j Framework</a> and GraphAware Neo4j RestTest .jar files (both of which you can <a href="http://graphaware.com/downloads/" target="_blank">download here</a>) dropped
-into the `plugins` directory of your Neo4j installation. After Neo4j restart, you will be able to use the RestTest APIs.
+into the `plugins` directory of your Neo4j installation.
+For the framework to work, you need to adjust your neo4j configuration as described in the <a href="https://github.com/graphaware/neo4j-framework#server-mode">framework installation instructions</a>.
+After Neo4j restart, you will be able to use the RestTest APIs.
 
 Releases are synced to <a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22resttest%22" target="_blank">Maven Central repository</a>.
 
