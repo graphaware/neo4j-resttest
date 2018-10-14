@@ -11,3 +11,5 @@ target/
 .DS_Store
 .classpath
 neo4j-home/
+dependency-reduced-pom.xml
+metrics/
