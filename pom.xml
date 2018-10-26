@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.graphaware.neo4j</groupId>
         <artifactId>module-parent</artifactId>
-        <version>3.5.0.53-SNAPSHOT</version>
+        <version>3.5.0.53-beta02</version>
     </parent>
 
     <name>GraphAware RestTest Module</name>
