@@ -1,7 +1,7 @@
 GraphAware Neo4j RestTest
 =========================
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 3.5.3.53.19
+[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 3.5.4.53.19
 
 GraphAware RestTest is a simple library for testing code that talks to Neo4j running in <a href="http://docs.neo4j.org/chunked/stable/server-installation.html" target="_blank">standalone server</a> mode.
 
@@ -114,7 +114,7 @@ For example, for the purposes of comparison, if we only wanted to include nodes 
 License
 -------
 
-Copyright (c) 2014-2017 GraphAware
+Copyright (c) 2014-2019 GraphAware
 
 GraphAware is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
