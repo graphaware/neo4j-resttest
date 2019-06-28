@@ -1,7 +1,7 @@
 GraphAware Neo4j RestTest
 =========================
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 3.5.5.53.0
+[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a> | Latest Release: 3.5.5.53.3
 
 GraphAware RestTest is a simple library for testing code that talks to Neo4j running in <a href="http://docs.neo4j.org/chunked/stable/server-installation.html" target="_blank">standalone server</a> mode.
 
