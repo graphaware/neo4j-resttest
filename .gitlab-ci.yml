@@ -17,8 +17,8 @@ uploadArtifact:
   dependencies:
     - bumpVersion
   variables:
-    FROM: target/resttest-$VERSION.jar
-    TO: $AWS_PATH/resttest-$VERSION.jar
+    FROM: target/resttest-$PARENT_VERSION.jar
+    TO: $AWS_PATH/resttest-$PARENT_VERSION.jar
   only:
     refs:
       - master
