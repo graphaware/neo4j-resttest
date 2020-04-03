@@ -1,0 +1,6 @@
+include:
+  - project: graphaware/devops/gitlab-ci-templates
+    file: neo4j-framework-template.yml
+
+variables:
+  JAR_NAME: resttest
