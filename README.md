@@ -5,6 +5,15 @@ GraphAware Neo4j RestTest
 
 GraphAware RestTest is a simple library for testing code that talks to Neo4j running in <a href="http://docs.neo4j.org/chunked/stable/server-installation.html" target="_blank">standalone server</a> mode.
 
+## Community vs Enterprise
+
+This open-source (GPL) version of the module is compatible with GraphAware Framework Community (GPL), which in turn 
+is compatible with Neo4j Community Edition (GPL) only. It *will not work* with Neo4j Enterprise Edition, which is a 
+proprietary and commercial software product of Neo4j, Inc..
+
+GraphAware offers an Enterprise version of the GraphAware Framework to licensed users of Neo4j Enterprise Edition.
+Please [get in touch](mailto:info@graphaware.com) to receive access.
+
 Getting the Software
 --------------------
 
@@ -110,11 +119,10 @@ For example, for the purposes of comparison, if we only wanted to include nodes 
 }
 ```
 
-
 License
 -------
 
-Copyright (c) 2014-2019 GraphAware
+Copyright (c) 2014-2020 GraphAware
 
 GraphAware is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
