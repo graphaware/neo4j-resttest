@@ -1,18 +1,16 @@
-GraphAware Neo4j RestTest
-=========================
+GraphAware Neo4j RestTest - RETIRED
+===================================
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-resttest.png)](https://travis-ci.org/graphaware/neo4j-resttest) | <a href="http://graphaware.com/downloads/" target="_blank">Downloads</a>
+## RestTest Has Been Retired
+As of April 2020, this module is retiring. This means it will no longer be maintained and released together with new versions of the GraphAware Framework and Neo4j. The last compatible Neo4j version is 3.5.14.
+
+Custom REST APIs on top of Neo4j have been practically replaced by Cypher User Functions and Procedures. If you need functionality similar to what RestTest provided, go ahead and write a procedure that uses [GraphUnit](https://github.com/graphaware/neo4j-framework/blob/master/tests/src/main/java/com/graphaware/test/unit/GraphUnit.java).  
+
+This repository will remain public.
+
+## Introduction
 
 GraphAware RestTest is a simple library for testing code that talks to Neo4j running in <a href="http://docs.neo4j.org/chunked/stable/server-installation.html" target="_blank">standalone server</a> mode.
-
-## Community vs Enterprise
-
-This open-source (GPL) version of the module is compatible with GraphAware Framework Community (GPL), which in turn 
-is compatible with Neo4j Community Edition (GPL) only. It *will not work* with Neo4j Enterprise Edition, which is a 
-proprietary and commercial software product of Neo4j, Inc..
-
-GraphAware offers an Enterprise version of the GraphAware Framework to licensed users of Neo4j Enterprise Edition.
-Please [get in touch](mailto:info@graphaware.com) to receive access.
 
 Getting the Software
 --------------------
